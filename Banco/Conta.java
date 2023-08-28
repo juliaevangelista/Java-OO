@@ -1,56 +1,82 @@
 package Banco;
 
-public class Conta{
-    private int agencia;
-    private int numero;
-    private String Titular;
+public class Conta {
+    private static int contadorIds = 1; // Contador de IDs
+    private Titular titular;
+    private int id;
     private double saldo;
-    public Conta() {
-    }
-    
-    public Conta(int agencia, int numero, Titular titular, double saldo) {
-        this.agencia = agencia;
-        this.numero = numero;
-        this.saldo = saldo;
-    }
+    private String descricao;
 
-    public boolean depositar(double valor){
-        if( valor>=0 ){
-            this.saldo += valor;
+
+public Conta(){
+
+}
+public Conta(Titular titular, double saldo, String descricao){
+    this.titular = titular;
+    this.id = contadorIds++;
+    this.saldo = saldo;
+    this.descricao = descricao;
+}
+
+public int getId() {
+    return id;
+}
+
+public double getSaldo(){
+    return saldo;
+}
+
+public String getDescricao(){
+    return descricao;
+}
+public void setDescricao(String descricao){
+    this.descricao = descricao;
+}
+public Titular getTitular(){
+    return titular;
+}
+
+public void setSaldo(double saldo){
+    this.saldo = saldo;
+}
+
+public void depositar(double valor) {
+    if (valor >= 0) {
+        saldo += valor;
+    } else {
+        System.out.println("Não é possível depositar um valor negativo.");
+    }
+}
+public boolean sacar(double valor) {
+    if (valor >= 0) {
+        if (saldo >= valor) {
+            saldo -= valor;
             return true;
-        }else {
+        } else {
+            System.out.println("Saldo insuficiente");
             return false;
         }
+    } else {
+        System.out.println("Não é possível sacar um valor negativo.");
+        return false;
     }
-    public boolean sacar(double valor){
-        if (valor>= 0 & this.saldo>= valor){
-            System.out.println("Saque realizado com sucesso");
-            this.saldo -= valor;
-            return true;
-        }else{
-            System.out.println("Saque não permitido");
-            return false;
-        }
-    }
-    public boolean transferir(double valor, Conta destino){
-        boolean sacou = this.sacar(valor);
-        if(sacou){
-            boolean depositou = destino.depositar(valor);
-            if(depositou){
-                System.out.println("Sucesso");
-                return true;
-            }else{
-                System.out.println("Transferencia não realizada");
-                return false;
-            }
-        }else{
+}
+public void transferir(Conta destino, double valor){
+        if (sacar(valor)) {
+            destino.depositar(valor);
+            System.out.println("Transferencia realizada");
+        } else {
             System.out.println("Transferencia não realizada");
-            return false;
         }
+        
+        
+
+}
+public double consultarSaldo(){
+    return saldo;
+}
+
+public String toString() {
+    return " Saldo: " + saldo;
     }
-    @Override
-    public String toString() {
-        return "Conta [agencia=" + agencia + ", numero=" + numero + ", titular=" + Titular + ", saldo=" + saldo + "]";
-    }
-    
 }
